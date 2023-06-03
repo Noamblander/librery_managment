@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+  <script src="../assets/js/color-modes.js"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+  <meta name="generator" content="Hugo 0.111.3">
+  
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+    crossorigin="anonymous"></script>
+  <link href="style.css" rel="stylesheet">
+  <style>
+    .card-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 2fr));
+      gap: 40px;
+    }
+  </style>
+</head>
+
+<body class="bg-dark">
+  <input type="text" id="searchInput" class="form-control form-control-lg" placeholder="Search for a book...">
+
+  <div class="card-group" id="book-cards"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    var books;
+
+    // Make a GET request to fetch the book data from the Flask API
+    axios.get('http://localhost:5000/books')
+      .then(function (response) {
+        // Store the book data
+        books = response.data;
+        // Display the books
+        displayBooks(books);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+    function displayBooks(books) {
+      // Clear the book cards
+      const bookCards = document.getElementById('book-cards');
+      bookCards.innerHTML = '';
+
+      // Iterate over each book in the response data
+      books.forEach(function (book) {
+        // Create a new card element for each book
+        const card = document.createElement('div');
+        card.classList.add('card');
+
+        // Create an anchor element
+        const a = document.createElement('a');
+        a.href = `onebook.html?id=${book.id}`;  // Change this to match the URL structure of your book pages
+        a.style.textDecoration = 'none';
+        a.style.color = 'inherit';
+
+        // Create the card image element
+        const img = document.createElement('img');
+        img.src = book.picture;
+        img.classList.add('card-img-top');
+        img.alt = 'Book Cover';
+        a.appendChild(img);
+
+        // Create the card body element
+        var cardBody = document.createElement('div');
+        cardBody.classList.add('card-body');
+
+        // Create the card title element
+        var title = document.createElement('h5');
+        title.classList.add('card-title');
+        title.textContent = book.name;
+        cardBody.appendChild(title);
+
+        // Create the card text element for author and year published
+        var authorYear = document.createElement('p');
+        authorYear.classList.add('card-text');
+        authorYear.textContent = book.author + "|" + book.year_published;
+        cardBody.appendChild(authorYear);
+
+        // Append the card body to the anchor
+        a.appendChild(cardBody);
+
+        // Append the anchor to the card
+        card.appendChild(a);
+
+        // Append the card to the book-cards container
+        bookCards.appendChild(card);
+      });
+    }
+
+    // Add an event listener to the search input
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+      // Get the search query
+      var searchQuery = e.target.value.toLowerCase();
+
+      // Filter the books based on the search query
+      var filteredBooks = books.filter(function(book) {
+        return book.name.toLowerCase().includes(searchQuery);
+      });
+
+      // Display the filtered books
+      displayBooks(filteredBooks);
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Create Book</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url(librery.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background-color: #f0f0f0;
+            width: 500px;
+            height: 600px;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h1 class="text-center">Create Book</h1>
+            <form id="createBookForm">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="author">Author:</label>
+                    <input type="text" class="form-control" id="author" name="author" required>
+                </div>
+                <div class="form-group">
+                    <label for="year_published">Year Published:</label>
+                    <input type="text" class="form-control" id="year_published" name="year_published" required>
+                </div>
+                <div class="form-group">
+                    <label for="picture">Picture:</label>
+                    <input type="text" class="form-control" id="picture" name="picture" required>
+                </div>
+                <select id="book_type">
+                    <option value="-1" selected>Type of loan</option>
+                    <option value="1">up to 10 days</option>
+                    <option value="2">up to 5 days</option>
+                    <option value="3">up to 2 days</option>
+                  </select>
+                <div class="text-center">
+                    <input type="submit" class="btn btn-primary" value="Create Book">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+    <script>
+        document.getElementById('createBookForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form submission
+
+            const book = {
+                name: document.getElementById('name').value,
+                author: document.getElementById('author').value,
+                year_published: document.getElementById('year_published').value,
+                picture: document.getElementById('picture').value,
+                book_type: document.getElementById('book_type').value
+            };
+
+            axios.post('http://127.0.0.1:5000/booksnew', book)
+            .then(function (response) {
+                        alert('Book added successfully');
+                        window.location.href = '/books.html';
+                    })
+                .catch(function (error) {
+                    console.log(error); // Display error message
+                });
+        });
+    </script>
+</body>
+
+</html>

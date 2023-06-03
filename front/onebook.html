@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+  <script src="../assets/js/color-modes.js"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+  <meta name="generator" content="Hugo 0.111.3">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+    crossorigin="anonymous"></script>
+
+  <style>
+    body {
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 80vh;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+    }
+
+    .full-page-card {
+
+      width: 80%;
+      max-width: 60%;
+      border: 1px solid #000;
+      border-radius: 5px;
+    }
+
+    .img-fluid {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      
+    }
+
+    #divbody {
+      position: relative;
+      left: 20px;
+    }
+
+    #buttons {
+      position: relative;
+      top: 40px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="full-page-card" id="book-card"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    // Get book ID from the URL of the current page
+    const params = new URLSearchParams(window.location.search);
+    let book_id = params.get('id');
+
+    function handleButtonClick(method, endpoint, redirectUrl) {
+      method(`http://localhost:5000/${endpoint}`)
+        .then(function (response) {
+          console.log(response);
+          window.location.href = redirectUrl;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
+    // Make a GET request to fetch the book data from the Flask API
+    axios.get(`http://localhost:5000/book/${book_id}`)
+      .then(function (response) {
+        // Get the book data from the response
+        const book = response.data[0];
+
+        // Check the book availability and set appropriate text
+        let availability = book.availability ? 'Available' : 'Unavailable';
+
+        // Get the book card container
+        const bookCard = document.getElementById('book-card');
+
+        // Create the card content
+        bookCard.innerHTML = `
+              <div class="row g-0">
+                <div class="col-md-4">
+                  <img src="${book.picture}" class="card-img-top" alt="Book Cover">
+                </div>
+                <div id=divbody class="col-md-7">
+                  <div class="card-body">
+                    <h1 class="card-title">${book.name}</h1><hr>
+                    <h3 class="card-text">${book.author} </h3>
+                    <h3 class="card-text">${book.year_published}</h3><hr>
+                    <h2 class="card-text" > ${availability} </h2>
+                    <div id=buttons class="card-text">
+                      <div id="loan-book" class="btn btn-primary">Loan book</div>  
+                      <div id="return-book" class="btn btn-primary mt-n1">Return book</div>
+                      <div id="edit-book" class="btn btn-secondary">Edit book</div>
+                      <div id="delete-book" class="btn btn-danger">Delete book</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+        // loan--------------------------------------------------
+        const loanButton = document.getElementById('loan-book');
+        loanButton.addEventListener('click', function (event) {
+          event.preventDefault();
+
+          // Check if the book is available or not
+          if (book.availability) {
+            window.location.href = `/new_loan.html?book_id=${book_id}`;
+          } else {
+            alert("Book is unavailable");
+          }
+        });
+        // delete-----------------------------------------------------
+        const deleteButton = document.getElementById('delete-book');
+        deleteButton.addEventListener('click', function (event) {
+          event.preventDefault();
+          handleButtonClick(axios.delete, '/delete_book/' + book_id, '/books.html');
+          alert("book deleted")
+        });
+
+        // edit--------------------------------------------------------
+        const editButton = document.getElementById('edit-book');
+        editButton.addEventListener('click', function (event) {
+          event.preventDefault();
+          window.location.href = `/edit_book.html?book_id=${book_id}`;
+        });
+       // return--------------------------------------------------------
+        const returnButton = document.getElementById('return-book');
+        returnButton.addEventListener('click', function (event) {
+          event.preventDefault();
+
+          // Check if the book is not available or not
+          if (!book.availability) {
+            handleButtonClick(axios.put, '/return_book/' + book_id, '/actions.html');
+            alert('book returned successfully')
+          } else {
+            alert("Book is not loaned");
+          }
+        });
+
+
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  </script>
+</body>
+
+</html>

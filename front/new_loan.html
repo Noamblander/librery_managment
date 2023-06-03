@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>loan Book</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url(books_exchanged.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50vh;
+        }
+
+        .form-container {
+            background-color: #f0f0f0;
+            width: 500px;
+            height: 400px;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h1 class="text-center">New Loan</h1>
+    <form id="createLoanForm">
+        <div class="form-group">
+        <label for="name">Customer Name:</label>
+        <input type="text" id="customer_name" name="customer_name" class="form-control" required>
+
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" class="form-control" required>
+
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" class="form-control" required>
+
+        <label for="book_id"></label>
+        <input type="hidden" id="book_id" name="book_id" required><br><br>
+
+        <div class="text-center">
+            <input type="submit" class="btn btn-primary" value="Create Loan">
+        </div>
+    </form>
+</div>
+</div>
+
+    <script>
+        // Get book_id from the URL of the current page
+        const params = new URLSearchParams(window.location.search);
+        let book_id = params.get('book_id');
+
+        // Set the book_id input value
+        document.getElementById('book_id').value = book_id;
+
+        document.getElementById('createLoanForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form submission
+
+            const loan = {
+                customer_name: document.getElementById('customer_name').value,
+                city: document.getElementById('city').value,
+                age: Number(document.getElementById('age').value),
+                book_id: document.getElementById('book_id').value,
+            };
+
+            axios.post(`http://127.0.0.1:5000/create_loan/${book_id}`, loan)
+               .then(function (response) {
+                        alert('Loan updated successfully');
+                        window.location.href = '/actions.html';
+                    })
+                .catch(function (error) {
+                    console.log(error); // Display error message
+                });
+        });
+    </script>
+</body>
+
+</html>

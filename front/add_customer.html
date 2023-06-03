@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add Customer</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url(librery.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background-color: #f0f0f0;
+            width: 400px;
+            height: 400px;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h1 class="text-center">Create Customer</h1>
+            <form id="createCustomerForm">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="city">City:</label>
+                    <input type="text" class="form-control" id="city" name="city" required>
+                </div>
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" class="form-control" id="age" name="age" required>
+                </div>
+                <div class="text-center">
+                    <input type="submit" class="btn btn-primary" value="Create Customer">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+    <script>
+        document.getElementById('createCustomerForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form submission
+
+            const customer = {
+                name: document.getElementById('name').value,
+                city: document.getElementById('city').value,
+                age: document.getElementById('age').value
+            };
+
+            axios.post('http://127.0.0.1:5000/customersnew', customer)
+                .then(function (response) {
+                    alert('customer added successfully');
+                    window.location.href = "customers.html";
+                 
+                })
+                .catch(function (error) {
+                    console.log(error); // Display error message
+                });
+        });
+    </script>
+</body>
+
+</html>

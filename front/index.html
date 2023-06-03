@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sign In</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url(librery.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background-color: #f0f0f0;
+            width: 400px;
+            height: 400px;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h1 class="text-center">Sign In</h1>
+
+            <form id="loginForm" action="index.html" method="get">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <div id="errorMessage" class="text-center"></div>
+                <div class="text-center">
+                    <input type="button" class="btn btn-primary" value="Sign In" onclick="checkCredentials()">
+                </div>
+            </form>
+            
+          
+        </div>
+    </div>
+
+    <script>
+        function checkCredentials() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            var errorMessageElement = document.getElementById("errorMessage");
+            
+            if (username === "Admin" && password === "123") {
+                window.location.href = "librery.html";
+            } else {
+                errorMessageElement.style.color = "red"
+                errorMessageElement.innerHTML = "Username or password is incorrect. Please try again.";
+            }
+        }
+    </script>
+</body>
+
+</html>

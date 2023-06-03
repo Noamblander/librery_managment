@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Book</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Book</h1>
+        <form id="editBookForm">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="author">Author</label>
+                <input type="text" id="author" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="year_published">Year Published</label>
+                <input type="number" id="year_published" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="picture">Picture</label>
+                <input type="text" id="picture" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="book_type">Book Type</label>
+                <input type="text" id="book_type" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    <script>
+        
+
+        window.onload = function() {
+            const params = new URLSearchParams(window.location.search);
+            book_id = params.get('book_id');
+           
+            
+            // Fetch book details and populate the form
+            axios.get('http://localhost:5000/book/' + book_id)
+                
+
+            // Get form and handle form submission
+            const form = document.getElementById('editBookForm');
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const data = {  
+                    name: document.getElementById('name').value,
+                    author: document.getElementById('author').value,
+                    year_published: document.getElementById('year_published').value,
+                    picture: document.getElementById('picture').value,
+                    book_type: document.getElementById('book_type').value
+                };
+
+                axios.put('http://localhost:5000/edit_book/' + book_id, data)
+                    .then(function (response) {
+                        alert('Book updated successfully');
+                        window.location.href = '/librery.html';
+                    })
+                    .catch(function (error) {
+                        console.error(error);
+                        alert('An error occurred');
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

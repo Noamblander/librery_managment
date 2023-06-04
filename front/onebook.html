@@ -63,14 +63,16 @@
 <body>
   <div class="full-page-card" id="book-card"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js">
+  </script>
   <script>
+    const my_server= 'https://library-managment-wbxp.onrender.com'
     // Get book ID from the URL of the current page
     const params = new URLSearchParams(window.location.search);
     let book_id = params.get('id');
 
     function handleButtonClick(method, endpoint, redirectUrl) {
-      method(`http://localhost:5000/${endpoint}`)
+      method(`${my_server}/${endpoint}`)
         .then(function (response) {
           console.log(response);
           window.location.href = redirectUrl;
@@ -79,9 +81,9 @@
           console.log(error);
         });
     }
-
-    // Make a GET request to fetch the book data from the Flask API
-    axios.get(`http://localhost:5000/book/${book_id}`)
+    
+    // Make a GET request to fetch the book data from the Flask APP
+    axios.get(`${my_server}/book/${book_id}`)
       .then(function (response) {
         // Get the book data from the response
         const book = response.data[0];
